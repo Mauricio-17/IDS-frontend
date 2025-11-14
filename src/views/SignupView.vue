@@ -90,6 +90,9 @@
         >
           Submit
         </button>
+        <span>
+          <RouterLink to="/login">Iniciar sesión</RouterLink>
+        </span>
       </div>
     </form>
   </main>
@@ -98,10 +101,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-const fullName = ref('')
-const area = ref('')
-const username = ref('')
-const password = ref('')
+const fullName = ref('Diego Benaglio')
+const area = ref('Analyst')
+const username = ref('dbenaglio')
+const password = ref('1q2w3e4r')
 const showPassword = ref(false)
 const showErrors = ref(false)
 
@@ -117,16 +120,27 @@ function togglePassword() {
   showPassword.value = !showPassword.value
 }
 
-function onSubmit() {
+async function onSubmit() {
+  const payload = {
+    fullname: fullName.value,
+    area: area.value,
+    username: username.value,
+    password: password.value,
+  }
+
   showErrors.value = true
   if (!canSubmit.value) return
 
-  console.log('📝 Form submitted:', {
-    fullName: fullName.value,
-    area: area.value,
-    username: username.value,
-    password: '••••••••', // never log raw passwords in production
+  const res = await fetch('http://127.0.0.1:8000/save-user', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
   })
+
+  const data = await res.json()
+  console.log(data)
 
   // Optionally clear the form
   fullName.value = ''

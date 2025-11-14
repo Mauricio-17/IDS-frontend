@@ -24,10 +24,56 @@ import HelloWorld from './components/HelloWorld.vue'
 -->
 
 <template>
-  <RouterView />
+  <div class="container">
+    <!-- 🌐 Navigation Bar -->
+    <nav class="block bg-indigo-600 text-white shadow-lg">
+      <div class="container mx-auto flex justify-between items-center p-4">
+        <h1 class="text-xl font-semibold">Network Flow Monitor</h1>
+
+        <ul class="flex space-x-6">
+          <li class="bg-sky-200 rounded" v-if="isLoggedIn">
+            <a href="#" class="hover:text-gray-200 text-l" @click="gotoDevices"> Equipos </a>
+          </li>
+          <li class="bg-sky-200 rounded" v-if="isLoggedIn">
+            <a href="#" class="hover:text-gray-200 text-l" @click="gotoHome"> Monitoreo </a>
+          </li>
+          <li class="bg-sky-200 rounded" v-if="isLoggedIn">
+            <a href="#" class="hover:text-gray-200 text-l" @click="signout"> Cerrar sesión </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <RouterView />
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { useRouter } from 'vue-router'
+import { computed, ref, onMounted } from 'vue'
+import { useAuthStore } from '@/stores/Auth'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const isLoggedIn = computed(() => {
+  return authStore.isLoggedIn
+})
+
+const signout = () => {
+  authStore.setUser(null)
+  router.push('/login')
+}
+
+const gotoDevices = () => {
+  router.push('/devices')
+}
+
+const gotoHome = () => {
+  router.push('/')
+}
+
+onMounted(() => {})
+</script>
 
 <!--
 <style scoped>
@@ -95,9 +141,13 @@ nav a:first-of-type {
 </style>
 -->
 
-<style>
+<style scoped>
 /* Optional: smooth font & layout tweaks */
 body {
   font-family: 'Inter', sans-serif;
+}
+
+li {
+  margin: 5px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <main class="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+  <main class="flex items-center justify-center bg-gray-50 p-6">
     <form
       @submit.prevent="onSubmit"
       class="w-full max-w-md bg-white rounded-2xl shadow-md p-6 space-y-6"
@@ -126,11 +126,13 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/Auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
-const username = ref('')
-const password = ref('')
+const username = ref('msolisci')
+const password = ref('1z2x3c4v')
 const remember = ref(false)
 const showPassword = ref(false)
 const loading = ref(false)
@@ -159,11 +161,16 @@ async function onSubmit() {
 
     const res = await fetch('http://127.0.0.1:8000/sign-in', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(payload),
     })
     const data = await res.json()
+    console.log(data)
 
-    if (data) {
+    if (data.username) {
+      authStore.setUser(data)
       router.push('/')
     }
 

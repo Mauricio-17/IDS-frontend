@@ -5,19 +5,6 @@
   </main>
   -->
   <div class="min-h-screen bg-gray-50 text-gray-800">
-    <!-- 🌐 Navigation Bar -->
-    <nav class="bg-indigo-600 text-white shadow-lg">
-      <div class="container mx-auto flex justify-between items-center p-4">
-        <h1 class="text-xl font-semibold">Network Flow Monitor</h1>
-        <ul class="flex space-x-6">
-          <li><a href="#" class="hover:text-gray-200">Dashboard</a></li>
-          <li><a href="#" class="hover:text-gray-200">Logs</a></li>
-          <li><a href="#" class="hover:text-gray-200">Alerts</a></li>
-          <li><a href="#" class="hover:text-gray-200">Settings</a></li>
-        </ul>
-      </div>
-    </nav>
-
     <!-- 📊 Data Table Section -->
     <main class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg relative">
       <!-- 🔘 Action Button -->
@@ -100,12 +87,16 @@
               <td class="py-2 px-4 border-b border-gray-200 whitespace-nowrap">
                 {{ row['Total Length of Bwd Packet'] }}
               </td>
+              <td class="py-2 px-4 border-b border-gray-200 whitespace-nowrap">
+                {{ row.origin_device ? row.origin_device : '' }}
+              </td>
               <td
                 class="py-2 px-4 border-b border-gray-200 font-semibold whitespace-nowrap sticky right-0 bg-white z-10"
                 :class="{
                   'text-green-600': row.Label === 'BENIGN',
                   'text-red-600': row.Label !== 'BENIGN',
                 }"
+                :title="legend[row.Label]"
               >
                 {{ category[row.Label] }}
               </td>
@@ -183,6 +174,7 @@ const columns = [
   'Duración de conexión',
   'Bytes de envío',
   'Bytes de recibo',
+  'Usuario',
   'Categoría',
 ]
 const category = {
@@ -191,6 +183,14 @@ const category = {
   DDoS: 'Denegación de servicios',
   Portscan: 'Escaneo de puertos',
   'Web attack': 'Ataque WEB',
+}
+
+const legend = {
+  BENIGN: 'Conectividad normal',
+  'Botnet - Attempted': 'Conectividad sospechosa de infiltración',
+  DDoS: 'Conectividad sospechosa de interrupción de servicios.',
+  Portscan: 'Conectividad sospechosa de revisión de servicios',
+  'Web attack': 'Conectividad sospechosa de ataque WEB',
 }
 
 // Mock data (IDS-style)

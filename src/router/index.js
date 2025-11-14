@@ -8,6 +8,29 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+      beforeEnter: (to, from, next) => {
+        const user = JSON.parse(window.localStorage.getItem('user'))
+        console.log(user)
+        if (user) {
+          next()
+        } else {
+          next({ name: 'login' })
+        }
+      },
+    },
+    {
+      path: '/devices',
+      name: 'devices',
+      component: () => import('../views/DeviceView.vue'),
+      beforeEnter: (to, from, next) => {
+        const user = JSON.parse(window.localStorage.getItem('user'))
+        console.log(user)
+        if (user) {
+          next()
+        } else {
+          next({ name: 'login' })
+        }
+      },
     },
     {
       path: '/about',
@@ -24,6 +47,15 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/LoginView.vue'),
+      beforeEnter: (to, from, next) => {
+        const user = JSON.parse(localStorage.getItem('user'))
+        console.log(user)
+        if (user) {
+          next({ name: 'home' })
+        } else {
+          next()
+        }
+      },
     },
     {
       path: '/signup',
@@ -32,8 +64,27 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/SignupView.vue'),
+      beforeEnter: (to, from, next) => {
+        const user = JSON.parse(localStorage.getItem('user'))
+        console.log(user)
+        if (user) {
+          next({ name: 'home' })
+        } else {
+          next()
+        }
+      },
     },
   ],
 })
-
+/*
+router.beforeEach((to, from, next) => {
+  const user = JSON.parse(window.localStorage.getItem('user'))
+  console.log(user)
+  if (to.name === 'login' && user == null) {
+    next()
+  } else {
+    next({ name: 'home' })
+  }
+})
+*/
 export default router
